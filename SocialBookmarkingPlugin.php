@@ -287,17 +287,22 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
     {
         static $services = null;
         $booleanFilter = new Omeka_Filter_Boolean;
-        if (!$services) {
+        if (is_null($services)) {
             $xml = $this->_get_services_xml();
-            $services = array();
-            foreach ($xml->data->services->service as $service) {
-                $serviceCode = (string)$service->code;
-                $services[$serviceCode] = array(
-                    'code' => $serviceCode,
-                    'name' => (string)$service->name,
-                    'icon' => (string)$service->icon,
-                    'script_only' => $booleanFilter->filter((string)$service->script_only),
-                );
+            if ($xml) {
+                $services = array();
+                foreach ($xml->data->services->service as $service) {
+                    $serviceCode = (string)$service->code;
+                    $services[$serviceCode] = array(
+                        'code' => $serviceCode,
+                        'name' => (string)$service->name,
+                        'icon' => (string)$service->icon,
+                        'script_only' => $booleanFilter->filter((string)$service->script_only),
+                    );
+                }
+            }
+            else {
+                return array();
             }
         }
         return $services;
@@ -321,9 +326,9 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
     protected function _get_services_xml()
     {
         static $xml = null;
-        if (!$xml) {
+        if (empty($xml)) {
             $file = file_get_contents(SocialBookmarkingPlugin::ADDTHIS_SERVICES_URL);
-            $xml = new SimpleXMLElement($file);
+            $xml = $file ? new SimpleXMLElement($file) : '';
         }
         return $xml;
     }
