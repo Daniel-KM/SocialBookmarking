@@ -37,11 +37,11 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
      * @var array Options and their default values.
      */
     protected $_options = array(
-        'social_bookmarking_services' => '',
-        'social_bookmarking_add_to_header' => '1',
-        'social_bookmarking_add_to_omeka_items' => '1',
-        'social_bookmarking_add_to_omeka_collections' => '1',
-        'social_bookmarking_addthis_account_id' => '',
+        self::SERVICE_SETTINGS_OPTION => '',
+        self::ADD_TO_HEADER_OPTION => '1',
+        self::ADD_TO_OMEKA_ITEMS_OPTION => '1',
+        self::ADD_TO_OMEKA_COLLECTIONS_OPTION => '1',
+        self::ADDTHIS_ACCOUNT_ID => '',
     );
 
     /**
@@ -66,7 +66,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function hookInstall()
     {
-        $this->_options['social_bookmarking_services'] = serialize($this->_get_default_service_settings());
+        $this->_options[self::SERVICE_SETTINGS_OPTION] = serialize($this->_get_default_service_settings());
         $this->_installOptions();
     }
 
@@ -105,10 +105,11 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
     }
 
     /**
-     * Render the config form.
+     * Shows plugin configuration page.
      */
-    public function hookConfigForm()
+    public function hookConfigForm($args)
     {
+        $view = get_view();
         // Set form defaults.
         $services = $this->_get_services();
         $serviceSettings = $this->_get_service_settings();
@@ -119,7 +120,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
                 : false;
         }
 
-        echo get_view()->partial(
+        echo $view->partial(
             'plugins/social-bookmarking-config-form.php',
             array(
                 'services' => $services,

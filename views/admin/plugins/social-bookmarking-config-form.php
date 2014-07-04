@@ -1,7 +1,7 @@
 <div id="socialBookmarkingServiceSettings">
     <div class="field">
         <div class="two columns alpha">
-            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADDTHIS_ACCOUNT_ID, 'AddThis Account ID'); ?>
+            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADDTHIS_ACCOUNT_ID, __('AddThis Account ID')); ?>
         </div>
         <div class="inputs five columns omega">
             <?php echo get_view()->formText(
@@ -16,7 +16,7 @@
 
     <div class="field">
         <div class="two columns alpha">
-            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION, 'Add to Header'); ?>
+            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION, __('Add to Header')); ?>
         </div>
         <div class="inputs five columns omega">
             <?php echo get_view()->formCheckbox(
@@ -31,7 +31,7 @@
 
     <div class="field">
         <div class="two columns alpha">
-            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADD_TO_OMEKA_ITEMS_OPTION, 'Add to Items'); ?>
+            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADD_TO_OMEKA_ITEMS_OPTION, __('Add to Items')); ?>
         </div>
         <div class="inputs five columns omega">
             <?php echo get_view()->formCheckbox(
@@ -46,7 +46,7 @@
 
     <div class="field">
         <div class="two columns alpha">
-            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADD_TO_OMEKA_COLLECTIONS_OPTION, 'Add to Collections'); ?>
+            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADD_TO_OMEKA_COLLECTIONS_OPTION, __('Add to Collections')); ?>
         </div>
         <div class="inputs five columns omega">
             <?php echo get_view()->formCheckbox(
