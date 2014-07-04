@@ -186,8 +186,9 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
                 $title= isset($vars['title']) ? $vars['title'] : get_option('site_title');
                 $description = '';
             }
-            echo '<div id="socialBookmarking" class="well">';
-            echo $view->partial('social-bookmarking-toolbar.php', array(
+
+            echo '<div id="socialBookmarking" class="navbar-nav">';
+            echo $view->partial('social-bookmarking/social-bookmarking-toolbar.php', array(
                 'url' => $url,
                 'title' => $title,
                 'description' => $description,
@@ -212,7 +213,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
             $description = strip_formatting(metadata($item, array('Dublin Core', 'Description')));
             echo '<div id="socialBookmarking" class="well">';
             echo '<h2>' . __('Share') . '</h2>';
-            echo $view->partial('social-bookmarking-toolbar.php', array(
+            echo $view->partial('social-bookmarking/social-bookmarking-toolbar.php', array(
                 'url' => $url,
                 'title' => $title,
                 'description' => $description,
@@ -237,7 +238,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
             $description = strip_formatting(metadata($collection, array('Dublin Core', 'Description')));
             echo '<div id="socialBookmarking" class="well">';
             echo '<h2>' . __('Share') . '</h2>';
-            echo $view->partial('social-bookmarking-toolbar.php', array(
+            echo $view->partial('social-bookmarking/social-bookmarking-toolbar.php', array(
                 'url' => $url,
                 'title' => $title,
                 'description' => $description,
