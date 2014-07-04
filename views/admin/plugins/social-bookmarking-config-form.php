@@ -16,6 +16,20 @@
 
     <div class="field">
         <div class="two columns alpha">
+            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADDTHIS_STYLE, __('AddThis style')); ?>
+        </div>
+        <div class="inputs five columns omega">
+            <?php echo get_view()->formText(
+                SocialBookmarkingPlugin::ADDTHIS_STYLE,
+                get_option(SocialBookmarkingPlugin::ADDTHIS_STYLE)); ?>
+            <p class="explanation"><?php echo __(
+                'Enter the style of the AddThis button (default: "addthis_default_style", can be "addthis_button_compact" or any other allowed style).'
+            ); ?></p>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="two columns alpha">
             <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION, __('Add to Header')); ?>
         </div>
         <div class="inputs five columns omega">

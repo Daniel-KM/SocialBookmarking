@@ -17,6 +17,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
     const ADD_TO_OMEKA_ITEMS_OPTION = 'social_bookmarking_add_to_omeka_items';
     const ADD_TO_OMEKA_COLLECTIONS_OPTION = 'social_bookmarking_add_to_omeka_collections';
     const ADDTHIS_ACCOUNT_ID = 'social_bookmarking_addthis_account_id';
+    const ADDTHIS_STYLE = 'addthis_style';
 
     /**
      * @var array Hooks for the plugin.
@@ -42,6 +43,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
         self::ADD_TO_OMEKA_ITEMS_OPTION => '1',
         self::ADD_TO_OMEKA_COLLECTIONS_OPTION => '1',
         self::ADDTHIS_ACCOUNT_ID => '',
+        self::ADDTHIS_STYLE => 'addthis_toolbox addthis_default_style',
     );
 
     /**
@@ -139,11 +141,13 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
         set_option(SocialBookmarkingPlugin::ADD_TO_OMEKA_ITEMS_OPTION, $post[SocialBookmarkingPlugin::ADD_TO_OMEKA_ITEMS_OPTION]);
         set_option(SocialBookmarkingPlugin::ADD_TO_OMEKA_COLLECTIONS_OPTION, $post[SocialBookmarkingPlugin::ADD_TO_OMEKA_COLLECTIONS_OPTION]);
         set_option(SocialBookmarkingPlugin::ADDTHIS_ACCOUNT_ID, $post[SocialBookmarkingPlugin::ADDTHIS_ACCOUNT_ID]);
+        set_option(SocialBookmarkingPlugin::ADDTHIS_STYLE, $post[SocialBookmarkingPlugin::ADDTHIS_STYLE]);
 
         unset($post[SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION]);
         unset($post[SocialBookmarkingPlugin::ADD_TO_OMEKA_ITEMS_OPTION]);
         unset($post[SocialBookmarkingPlugin::ADD_TO_OMEKA_COLLECTIONS_OPTION]);
         unset($post[SocialBookmarkingPlugin::ADDTHIS_ACCOUNT_ID]);
+        unset($post[SocialBookmarkingPlugin::ADDTHIS_STYLE]);
 
         $serviceSettings = $this->_get_service_settings();
         $booleanFilter = new Omeka_Filter_Boolean;
@@ -196,6 +200,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
                 'services' => $this->_get_services(),
                 'serviceSettings' => $this->_get_service_settings(),
                 'addthisAccountID' => $this->_get_addthis_account_id(),
+                'addthisStyle' => $this->_get_addthis_style(),
             ));
             echo '</div>';
         }
@@ -221,6 +226,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
                 'services' => $this->_get_services(),
                 'serviceSettings' => $this->_get_service_settings(),
                 'addthisAccountID' => $this->_get_addthis_account_id(),
+                'addthisStyle' => $this->_get_addthis_style(),
             ));
             echo '</div>';
         }
@@ -246,6 +252,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
                 'services' => $this->_get_services(),
                 'serviceSettings' => $this->_get_service_settings(),
                 'addthisAccountID' => $this->_get_addthis_account_id(),
+                'addthisStyle' => $this->_get_addthis_style(),
             ));
             echo '</div>';
         }
@@ -342,5 +349,14 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
     {
         $thisId = get_option(SocialBookmarkingPlugin::ADDTHIS_ACCOUNT_ID);
         return $thisId;
+    }
+
+    /**
+     * Gets the addthis style.
+     */
+    protected function _get_addthis_style()
+    {
+        $style = get_option(SocialBookmarkingPlugin::ADDTHIS_STYLE);
+        return $style;
     }
 }
