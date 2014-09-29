@@ -54,9 +54,9 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
         'facebook',
         'twitter',
         'linkedin',
-        'pinterest',
+        'pinterest_share',
         'email',
-        'google',
+        'google_plusone_share',
         'delicious',
     );
 
