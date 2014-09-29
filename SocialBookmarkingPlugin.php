@@ -29,6 +29,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
         'initialize',
         'config_form',
         'config',
+        'admin_head',
         'public_header',
         'public_items_show',
         'public_collections_show'
@@ -56,11 +57,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
         'pinterest',
         'email',
         'google',
-        'orkut',
         'delicious',
-        'digg',
-        'stumbleupon',
-        'yahoobkm'
     );
 
     /**
@@ -160,6 +157,14 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
             }
         }
         $this->_set_service_settings($serviceSettings);
+    }
+
+    public function hookAdminHead()
+    {
+        $request = Zend_Controller_Front::getInstance()->getRequest();
+        if ($request->getModuleName() == 'default' && $request->getControllerName() == 'plugins' && $request->getActionName() == 'config' && $request->getParam('name') == 'SocialBookmarking'){
+            queue_css_url('http://cache.addthiscdn.com/icons/v1/sprites/services.css');
+        }
     }
 
     /**
@@ -305,7 +310,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
                     $services[$serviceCode] = array(
                         'code' => $serviceCode,
                         'name' => (string)$service->name,
-                        'icon' => (string)$service->icon,
+                        'icon' => (string)$service->icon32,
                         'script_only' => $booleanFilter->filter((string)$service->script_only),
                     );
                 }

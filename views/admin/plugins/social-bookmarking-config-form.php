@@ -78,11 +78,13 @@
             <p><?php echo __('Choose which social bookmarking services you would like to use on your site.'); ?></p>
         </div>
         <div class="inputs five columns omega">
-            <ul class="details">
+            <ul style="list-style-type:none" class="details">
             <?php foreach($services as $serviceCode => $serviceInfo): ?>
-                <li class="details">
+                <li>
                     <?php echo $this->formCheckbox($serviceCode, true, array('checked' => (boolean) $setServices[$serviceCode])); ?>
-                    <img src="<?php echo html_escape($serviceInfo['icon']); ?>" /> <?php echo html_escape($serviceInfo['name']); ?>
+                    <span style="display:inline" class="addthis_service_icon icon_<?php echo html_escape($serviceCode); ?>"></span>
+                    &nbsp;
+                    <?php echo html_escape($serviceInfo['name']); ?>
                 </li>
             <?php endforeach; ?>
             </ul>
