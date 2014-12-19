@@ -1,10 +1,10 @@
 <div id="socialBookmarkingServiceSettings">
     <div class="field">
         <div class="two columns alpha">
-            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADDTHIS_ACCOUNT_ID, __('AddThis Account ID')); ?>
+            <?php echo $this->formLabel(SocialBookmarkingPlugin::ADDTHIS_ACCOUNT_ID, __('AddThis Account ID')); ?>
         </div>
         <div class="inputs five columns omega">
-            <?php echo get_view()->formText(
+            <?php echo $this->formText(
                 SocialBookmarkingPlugin::ADDTHIS_ACCOUNT_ID,
                 get_option(SocialBookmarkingPlugin::ADDTHIS_ACCOUNT_ID),
                 array('placeholder' => 'AddThisID')); ?>
@@ -16,10 +16,10 @@
 
     <div class="field">
         <div class="two columns alpha">
-            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADDTHIS_STYLE, __('AddThis style')); ?>
+            <?php echo $this->formLabel(SocialBookmarkingPlugin::ADDTHIS_STYLE, __('AddThis style')); ?>
         </div>
         <div class="inputs five columns omega">
-            <?php echo get_view()->formText(
+            <?php echo $this->formText(
                 SocialBookmarkingPlugin::ADDTHIS_STYLE,
                 get_option(SocialBookmarkingPlugin::ADDTHIS_STYLE)); ?>
             <p class="explanation"><?php echo __(
@@ -30,10 +30,10 @@
 
     <div class="field">
         <div class="two columns alpha">
-            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION, __('Add to Header')); ?>
+            <?php echo $this->formLabel(SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION, __('Add to Header')); ?>
         </div>
         <div class="inputs five columns omega">
-            <?php echo get_view()->formCheckbox(
+            <?php echo $this->formCheckbox(
                 SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION,
                 true,
                 array('checked' => (boolean) get_option(SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION))); ?>
@@ -45,10 +45,10 @@
 
     <div class="field">
         <div class="two columns alpha">
-            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADD_TO_OMEKA_ITEMS_OPTION, __('Add to Items')); ?>
+            <?php echo $this->formLabel(SocialBookmarkingPlugin::ADD_TO_OMEKA_ITEMS_OPTION, __('Add to Items')); ?>
         </div>
         <div class="inputs five columns omega">
-            <?php echo get_view()->formCheckbox(
+            <?php echo $this->formCheckbox(
                 SocialBookmarkingPlugin::ADD_TO_OMEKA_ITEMS_OPTION,
                 true,
                 array('checked' => (boolean) get_option(SocialBookmarkingPlugin::ADD_TO_OMEKA_ITEMS_OPTION))); ?>
@@ -60,10 +60,10 @@
 
     <div class="field">
         <div class="two columns alpha">
-            <?php echo get_view()->formLabel(SocialBookmarkingPlugin::ADD_TO_OMEKA_COLLECTIONS_OPTION, __('Add to Collections')); ?>
+            <?php echo $this->formLabel(SocialBookmarkingPlugin::ADD_TO_OMEKA_COLLECTIONS_OPTION, __('Add to Collections')); ?>
         </div>
         <div class="inputs five columns omega">
-            <?php echo get_view()->formCheckbox(
+            <?php echo $this->formCheckbox(
                 SocialBookmarkingPlugin::ADD_TO_OMEKA_COLLECTIONS_OPTION,
                 true,
                 array('checked' => (boolean) get_option(SocialBookmarkingPlugin::ADD_TO_OMEKA_COLLECTIONS_OPTION))); ?>
@@ -81,7 +81,7 @@
             <ul class="details">
             <?php foreach($services as $serviceCode => $serviceInfo): ?>
                 <li class="details">
-                    <?php echo get_view()->formCheckbox($serviceCode, true, array('checked' => (boolean) $setServices[$serviceCode])); ?>
+                    <?php echo $this->formCheckbox($serviceCode, true, array('checked' => (boolean) $setServices[$serviceCode])); ?>
                     <img src="<?php echo html_escape($serviceInfo['icon']); ?>" /> <?php echo html_escape($serviceInfo['name']); ?>
                 </li>
             <?php endforeach; ?>
