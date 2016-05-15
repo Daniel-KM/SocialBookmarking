@@ -186,15 +186,17 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
                     'files',
                 ))) {
                 $recordType = $view->singularize($params['controller']);
-                $record = get_current_record($recordType);
-                $title = isset($vars['title'])
-                    ? $vars['title']
-                    : strip_formatting(metadata($record, array('Dublin Core', 'Title')));
-                $description = strip_formatting(metadata($record, array('Dublin Core', 'Description')));
+                $record = get_current_record($recordType, false);
+                if ($record) {
+                    $title = isset($vars['title'])
+                        ? $vars['title']
+                        : strip_formatting(metadata($record, array('Dublin Core', 'Title')));
+                    $description = strip_formatting(metadata($record, array('Dublin Core', 'Description')));
+                }
             }
-            else {
-                $title= isset($vars['title']) ? $vars['title'] : get_option('site_title');
-                $description = '';
+            if (empty($title)) {
+                $title = isset($vars['title']) ? $vars['title'] : get_option('site_title');
+                $description = empty($descrition) ? '' : $description;
             }
 
             echo '<div id="socialBookmarking" class="navbar-nav">';
