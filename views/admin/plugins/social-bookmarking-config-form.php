@@ -30,6 +30,21 @@
 
     <div class="field">
         <div class="two columns alpha">
+            <?php echo $this->formLabel(SocialBookmarkingPlugin::ADD_OPEN_GRAPH_TAGS_OPTION, __('Add Open Graph Metadata Tags')); ?>
+        </div>
+        <div class="inputs five columns omega">
+            <?php echo $this->formCheckbox(
+                SocialBookmarkingPlugin::ADD_OPEN_GRAPH_TAGS_OPTION,
+                true,
+                array('checked' => (boolean) get_option(SocialBookmarkingPlugin::ADD_OPEN_GRAPH_TAGS_OPTION))); ?>
+            <p class="explanation"><?php echo __(
+                'If checked, this plugin will add meta tags for Open Graph in the HTML header of each page.'
+            ); ?></p>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="two columns alpha">
             <?php echo $this->formLabel(SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION, __('Add to Header')); ?>
         </div>
         <div class="inputs five columns omega">
