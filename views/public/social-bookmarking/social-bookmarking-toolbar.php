@@ -2,8 +2,11 @@
 <?php if ($addthisStyle == 'addthis_button_compact'): ?>
 <a class="addthis_button_compact"></a>
 <?php else: ?>
-<div class="addthis_toolbox <?php echo $addthisStyle; ?>" addthis:url="<?php
-    echo html_escape($url); ?>" addthis:title="<?php echo html_escape($title); ?>" addthis:description="<?php echo html_escape($description); ?>">
+<div class="addthis_toolbox <?php echo $addthisStyle; ?>" 
+	data-url="<?php echo $url; ?>" 
+	data-title="<?php echo $title; ?>" 
+	data-description="<?php echo $description; ?>"
+	data-media="<?php echo $image; ?>" >
 <?php
     $booleanFilter = new Omeka_Filter_Boolean;
     foreach ($serviceSettings as $serviceCode => $value) :
