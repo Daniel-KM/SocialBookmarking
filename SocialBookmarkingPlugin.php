@@ -13,6 +13,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
 {
     const ADDTHIS_SERVICES_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.xml';
     const SERVICE_SETTINGS_OPTION = 'social_bookmarking_services';
+    const ADD_OPEN_GRAPH_TAGS_OPTION = 'social_bookmarking_add_open_graph_tags';
     const ADD_TO_HEADER_OPTION = 'social_bookmarking_add_to_header';
     const ADD_TO_OMEKA_ITEMS_OPTION = 'social_bookmarking_add_to_omeka_items';
     const ADD_TO_OMEKA_COLLECTIONS_OPTION = 'social_bookmarking_add_to_omeka_collections';
@@ -30,6 +31,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
         'config_form',
         'config',
         'admin_head',
+        'public_head',
         'public_header',
         'public_items_show',
         'public_collections_show'
@@ -40,6 +42,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
      */
     protected $_options = array(
         self::SERVICE_SETTINGS_OPTION => '',
+        self::ADD_OPEN_GRAPH_TAGS_OPTION => '1',
         self::ADD_TO_HEADER_OPTION => '1',
         self::ADD_TO_OMEKA_ITEMS_OPTION => '1',
         self::ADD_TO_OMEKA_COLLECTIONS_OPTION => '1',
@@ -134,12 +137,14 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
     {
         $post = $args['post'];
 
+        set_option(SocialBookmarkingPlugin::ADD_OPEN_GRAPH_TAGS_OPTION, $post[SocialBookmarkingPlugin::ADD_OPEN_GRAPH_TAGS_OPTION]);
         set_option(SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION, $post[SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION]);
         set_option(SocialBookmarkingPlugin::ADD_TO_OMEKA_ITEMS_OPTION, $post[SocialBookmarkingPlugin::ADD_TO_OMEKA_ITEMS_OPTION]);
         set_option(SocialBookmarkingPlugin::ADD_TO_OMEKA_COLLECTIONS_OPTION, $post[SocialBookmarkingPlugin::ADD_TO_OMEKA_COLLECTIONS_OPTION]);
         set_option(SocialBookmarkingPlugin::ADDTHIS_ACCOUNT_ID, $post[SocialBookmarkingPlugin::ADDTHIS_ACCOUNT_ID]);
         set_option(SocialBookmarkingPlugin::ADDTHIS_STYLE, $post[SocialBookmarkingPlugin::ADDTHIS_STYLE]);
 
+        unset($post[SocialBookmarkingPlugin::ADD_OPEN_GRAPH_TAGS_OPTION]);
         unset($post[SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION]);
         unset($post[SocialBookmarkingPlugin::ADD_TO_OMEKA_ITEMS_OPTION]);
         unset($post[SocialBookmarkingPlugin::ADD_TO_OMEKA_COLLECTIONS_OPTION]);
@@ -167,16 +172,18 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
         }
     }
 
+
     /**
-     * Hook for public header.
+     * Hook for public head.
      */
-    public function hookPublicHeader($args)
+    public function hookPublicHead($args)
     {
-        if (get_option(SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION) == '1') {
+        if (get_option(SocialBookmarkingPlugin::ADD_OPEN_GRAPH_TAGS_OPTION) == '1') {
             $view = $args['view'];
             $vars = $view->getVars();
             $request = Zend_Controller_Front::getInstance()->getRequest();
             $params = $request->getParams();
+            $image = '';
 
             // We need absolute urls and getRequestUri() doesn't return domain.
             $url = WEB_ROOT . $request->getPathInfo();
@@ -192,6 +199,55 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
                         ? $vars['title']
                         : strip_formatting(metadata($record, array('Dublin Core', 'Title')));
                     $description = strip_formatting(metadata($record, array('Dublin Core', 'Description')));
+                    $image = $this->_get_image_url($record, $recordType);
+                }
+            }
+            if (empty($title)) {
+                $title = isset($vars['title']) ? $vars['title'] : get_option('site_title');
+                $description = empty($descrition) ? '' : $description;
+            }
+
+            echo $view->partial('social-bookmarking/open-graph-meta-tags.php', array(
+                'url' => $url,
+                'title' => $title,
+                'description' => $description,
+                'image' => $image,
+                'services' => $this->_get_services(),
+                'serviceSettings' => $this->_get_service_settings(),
+                'addthisAccountID' => $this->_get_addthis_account_id(),
+                'addthisStyle' => $this->_get_addthis_style(),
+            ));
+        }
+    }
+
+
+    /**
+     * Hook for public header.
+     */
+    public function hookPublicHeader($args)
+    {
+        if (get_option(SocialBookmarkingPlugin::ADD_TO_HEADER_OPTION) == '1') {
+            $view = $args['view'];
+            $vars = $view->getVars();
+            $request = Zend_Controller_Front::getInstance()->getRequest();
+            $params = $request->getParams();
+            $image = '';
+
+            // We need absolute urls and getRequestUri() doesn't return domain.
+            $url = WEB_ROOT . $request->getPathInfo();
+            if ($params['action'] == 'show' && in_array($params['controller'], array(
+                    'collections',
+                    'items',
+                    'files',
+                ))) {
+                $recordType = $view->singularize($params['controller']);
+                $record = get_current_record($recordType, false);
+                if ($record) {
+                    $title = isset($vars['title'])
+                        ? $vars['title']
+                        : strip_formatting(metadata($record, array('Dublin Core', 'Title')));
+                    $description = strip_formatting(metadata($record, array('Dublin Core', 'Description')));
+                    $image = $this->_get_image_url($record, $recordType);
                 }
             }
             if (empty($title)) {
@@ -204,6 +260,7 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
                 'url' => $url,
                 'title' => $title,
                 'description' => $description,
+                'image' => $image,
                 'services' => $this->_get_services(),
                 'serviceSettings' => $this->_get_service_settings(),
                 'addthisAccountID' => $this->_get_addthis_account_id(),
@@ -224,12 +281,14 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
             $url = record_url($item, 'show', true);
             $title = strip_formatting(metadata($item, array('Dublin Core', 'Title')));
             $description = strip_formatting(metadata($item, array('Dublin Core', 'Description')));
+            $image = $this->_get_image_url($item, 'item');
             echo '<div id="socialBookmarking" class="well">';
             echo '<h2>' . __('Share') . '</h2>';
             echo $view->partial('social-bookmarking/social-bookmarking-toolbar.php', array(
                 'url' => $url,
                 'title' => $title,
                 'description' => $description,
+                'image' => $image,
                 'services' => $this->_get_services(),
                 'serviceSettings' => $this->_get_service_settings(),
                 'addthisAccountID' => $this->_get_addthis_account_id(),
@@ -250,12 +309,14 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
             $url = record_url($collection, 'show', true);
             $title = strip_formatting(metadata($collection, array('Dublin Core', 'Title')));
             $description = strip_formatting(metadata($collection, array('Dublin Core', 'Description')));
+            $image = $this->_get_image_url($collection, 'collection');
             echo '<div id="socialBookmarking" class="well">';
             echo '<h2>' . __('Share') . '</h2>';
             echo $view->partial('social-bookmarking/social-bookmarking-toolbar.php', array(
                 'url' => $url,
                 'title' => $title,
                 'description' => $description,
+                'image' => $image,
                 'services' => $this->_get_services(),
                 'serviceSettings' => $this->_get_service_settings(),
                 'addthisAccountID' => $this->_get_addthis_account_id(),
@@ -264,6 +325,67 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
             echo '</div>';
         }
     }
+
+
+    /**
+     * Gets a representative image URL for an object
+     */
+    protected function _get_image_url($record, $recordType)
+    {
+        $image = "";
+
+        // attempt to get the default representative file for this record
+        $file = $record->getFile();
+        if ($file) {
+            $image = $file->getWebPath('fullsize');
+        }
+
+        // if no file found, see if we can get an image through the DigitalObjectLinker plugin
+        if (plugin_is_active('DigitalObjectLinker') && empty($image)) {
+            if ($recordType == 'collection') {
+                $items = get_records('Item', array( 'collection' => $record->id ), 10);
+                foreach ($items as $item) {
+                    $externalimages = $this->_get_external_images($item);
+                    if (!empty($externalimages)) {
+                        $image = $externalimages[0]['full'];
+                        break;
+                    }
+                }
+            }
+            else {
+                $externalimages = $this->_get_external_images($record);
+                if (!empty($externalimages)) {
+                    $image = $externalimages[0]['full'];
+                }
+            }
+        }
+
+        return $image;
+    }
+
+
+    /**
+     * Retrieves external images through the DigitalObjectLinker plugin.
+     * (see https://github.com/ives1227/myomekaplugins/wiki/Digital-Object-Linker)
+     */
+    protected function _get_external_images($item) 
+    {
+        $select = get_db()->getTable('ExternalImages')->getSelect();
+        $recordid = get_db()->getAdapter()->quote($item->id, "INTEGER");
+        $select->where("omeka_id = " . $recordid);
+
+        $rows = get_db()->fetchAll($select);
+        $externalimages = array();
+        if (!is_null($rows))
+        {
+            foreach ($rows as $row)
+            {
+                $externalimages[]= array('thumb' => $row['thumbnail_uri'], 'full'=>$row['full_uri'], 'linkto'=>$row['linkto_uri'], 'width'=>$row['width'], 'height'=>$row['height']);
+            }
+        }
+        return $externalimages;
+    }
+
 
     /**
      * Gets the service settings from the database.

@@ -13,6 +13,10 @@ their social networks.
 An optional AddThisId can be configured to enable the user to track shares via
 their [AddThis] account analytics.
 
+Open Graph metadata tags, used by Facebook and other sites to gather information
+about the page (title, description, image to display) can be included by enabling
+the option in the plugin configuration.
+
 
 Installation
 ------------
@@ -76,6 +80,7 @@ Copyright
 * Copyright Center for History & New Media, 2013
 * Copyright Anuragji, 2013
 * Copyright Daniel Berthereau, 2013
+* Copyright Walter Rice, 2017
 
 
 [Omeka]: https://omeka.org
