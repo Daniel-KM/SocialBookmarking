@@ -86,7 +86,7 @@ Copyright
 [Omeka]: https://omeka.org
 [AddThis]: http://www.addthis.com
 [SocialBookmarking]: https://github.com/omeka/plugin-SocialBookmarking
-[SocialBookmarking issues]: http://omeka.org/forums/forum/plugins
+[SocialBookmarking issues]: https://omeka.org/forums/forum/plugins
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html "GNU/GPL v3"
 [Jeremy Boggs]: https://github.com/clioweb
 [Center for History & New Media]: http://chnm.gmu.edu
