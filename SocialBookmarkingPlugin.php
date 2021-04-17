@@ -276,24 +276,9 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookPublicItemsShow($args)
     {
         if (get_option(SocialBookmarkingPlugin::ADD_TO_OMEKA_ITEMS_OPTION) == '1') {
-            $view = $args['view'];
-            $item = $args['item'];
-            $url = record_url($item, 'show', true);
-            $title = strip_formatting(metadata($item, array('Dublin Core', 'Title')));
-            $description = strip_formatting(metadata($item, array('Dublin Core', 'Description')));
-            $image = $this->_get_image_url($item, 'item');
             echo '<div id="socialBookmarking" class="well">';
             echo '<h2>' . __('Share') . '</h2>';
-            echo $view->partial('social-bookmarking/social-bookmarking-toolbar.php', array(
-                'url' => $url,
-                'title' => $title,
-                'description' => $description,
-                'image' => $image,
-                'services' => $this->_get_services(),
-                'serviceSettings' => $this->_get_service_settings(),
-                'addthisAccountID' => $this->_get_addthis_account_id(),
-                'addthisStyle' => $this->_get_addthis_style(),
-            ));
+            echo $this->social_bookmarking_create_toolbar($args, 'item');
             echo '</div>';
         }
     }
@@ -304,24 +289,9 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookPublicCollectionsShow($args)
     {
         if (get_option(SocialBookmarkingPlugin::ADD_TO_OMEKA_COLLECTIONS_OPTION) == '1') {
-            $view = $args['view'];
-            $collection = $args['collection'];
-            $url = record_url($collection, 'show', true);
-            $title = strip_formatting(metadata($collection, array('Dublin Core', 'Title')));
-            $description = strip_formatting(metadata($collection, array('Dublin Core', 'Description')));
-            $image = $this->_get_image_url($collection, 'collection');
             echo '<div id="socialBookmarking" class="well">';
             echo '<h2>' . __('Share') . '</h2>';
-            echo $view->partial('social-bookmarking/social-bookmarking-toolbar.php', array(
-                'url' => $url,
-                'title' => $title,
-                'description' => $description,
-                'image' => $image,
-                'services' => $this->_get_services(),
-                'serviceSettings' => $this->_get_service_settings(),
-                'addthisAccountID' => $this->_get_addthis_account_id(),
-                'addthisStyle' => $this->_get_addthis_style(),
-            ));
+            echo $this->social_bookmarking_create_toolbar($args, 'collection');
             echo '</div>';
         }
     }
@@ -488,4 +458,34 @@ class SocialBookmarkingPlugin extends Omeka_Plugin_AbstractPlugin
         $style = get_option(SocialBookmarkingPlugin::ADDTHIS_STYLE);
         return $style;
     }
+	
+	/**
+     * social_bookmarking_create_toolbar function
+     *
+     * @param array $args
+     * @param string $model_type can be 'item' or 'collection'
+     */
+    function social_bookmarking_create_toolbar($args, $model_type) 
+	{
+		$view = $args['view'];
+		if ($model_type == 'item' || $model_type == 'collection') {
+			$model = $args[$model_type];
+			$url = record_url($model, 'show', true);
+			$title = strip_formatting(metadata($model, array('Dublin Core', 'Title')));
+			$description = strip_formatting(metadata($model, array('Dublin Core', 'Description')));
+			$image = SocialBookmarkingPlugin::_get_image_url($model, $model_type);
+			return $view->partial('social-bookmarking/social-bookmarking-toolbar.php', array(
+				'url' => $url,
+				'title' => $title,
+				'description' => $description,
+				'image' => $image,
+				'services' => SocialBookmarkingPlugin::_get_services(),
+				'serviceSettings' => SocialBookmarkingPlugin::_get_service_settings(),
+				'addthisAccountID' => SocialBookmarkingPlugin::_get_addthis_account_id(),
+				'addthisStyle' => SocialBookmarkingPlugin::_get_addthis_style(),
+			));
+		} else {
+			return null;
+		}
+	}
 }
