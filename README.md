@@ -28,6 +28,15 @@ Then install it like any other Omeka plugin and follow the config instructions.
 The plugin can use AddThis ID. You need to get key to this service and set it.
 
 
+Buttons toolbar
+---------------
+
+Button toolbar can be inserted in code at any needed place just calling the `social_bookmarking_create_tollbar` function, like in the following example:
+```
+$item = get_current_record('item');
+echo (new SocialBookmarkingPlugin)->social_bookmarking_create_toolbar(array('view' => $this, 'item' => $item), 'item');
+```
+
 Warning
 -------
 
@@ -81,6 +90,7 @@ Copyright
 * Copyright Anuragji, 2013
 * Copyright Daniel Berthereau, 2013
 * Copyright Walter Rice, 2017
+* Copyright Daniele Binaghi, 2021
 
 
 [Omeka]: https://omeka.org
